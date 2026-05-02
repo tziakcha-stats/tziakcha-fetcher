@@ -47,3 +47,4 @@ settings.py.example
 example/
 
 docs/superpowers/
+.worktrees/
