@@ -9,7 +9,8 @@
     "url": "https://github.com/Choimoe"
   },
   "files": [
-    "lib"
+    "lib",
+    "!lib/__tests__"
   ],
   "main": "lib/index.js",
   "keywords": [
@@ -65,9 +66,13 @@
   },
   "scripts": {
     "pretest": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "npm test -- --runInBand"
   },
-  "repository": "tziakcha-stats/tziakcha-fetcher",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tziakcha-stats/tziakcha-fetcher.git"
+  },
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
