@@ -1,6 +1,6 @@
 {
   "name": "tziakcha-fetcher",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "获取tziakcha牌谱数据并进行简单处理和统计，提供一些牌谱相关的实用工具。",
   "homepage": "https://github.com/tziakcha-stats/tziakcha-fetcher",
   "author": {
