@@ -1,6 +1,6 @@
 {
   "name": "tziakcha-fetcher",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "获取tziakcha牌谱数据并进行简单处理和统计，提供一些牌谱相关的实用工具。",
   "homepage": "https://github.com/tziakcha-stats/tziakcha-fetcher",
   "author": {
@@ -11,82 +11,78 @@
   "files": [
     "lib",
     "!lib/__tests__",
-    "*.d.ts",
-    "record",
-    "core",
-    "node",
     "types"
   ],
   "main": "lib/index.js",
-  "types": "index.d.ts",
+  "types": "types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./types/index.d.ts",
       "require": "./lib/index.js",
       "default": "./lib/index.js"
     },
     "./url": {
-      "types": "./url.d.ts",
+      "types": "./types/url.d.ts",
       "require": "./lib/url/index.js",
       "default": "./lib/url/index.js"
     },
     "./session": {
-      "types": "./session.d.ts",
+      "types": "./types/session.d.ts",
       "require": "./lib/session/index.js",
       "default": "./lib/session/index.js"
     },
     "./record": {
-      "types": "./record.d.ts",
+      "types": "./types/record/index.d.ts",
       "require": "./lib/record/index.js",
       "default": "./lib/record/index.js"
     },
     "./record/fetch": {
-      "types": "./record/fetch.d.ts",
+      "types": "./types/record/fetch.d.ts",
       "require": "./lib/record/fetch.js",
       "default": "./lib/record/fetch.js"
     },
     "./record/win": {
-      "types": "./record/win.d.ts",
+      "types": "./types/record/win.d.ts",
       "require": "./lib/record/win.js",
       "default": "./lib/record/win.js"
     },
     "./record/actions": {
-      "types": "./record/actions.d.ts",
+      "types": "./types/record/actions.d.ts",
       "require": "./lib/record/actions.js",
       "default": "./lib/record/actions.js"
     },
     "./record/simulate": {
-      "types": "./record/simulate.d.ts",
+      "types": "./types/record/simulate.d.ts",
       "require": "./lib/record/simulate.js",
       "default": "./lib/record/simulate.js"
     },
     "./stats": {
-      "types": "./stats.d.ts",
+      "types": "./types/stats.d.ts",
       "require": "./lib/stats/index.js",
       "default": "./lib/stats/index.js"
     },
     "./core": {
-      "types": "./core.d.ts",
+      "types": "./types/core/index.d.ts",
       "require": "./lib/core/index.js",
       "default": "./lib/core/index.js"
     },
     "./core/config": {
-      "types": "./core/config.d.ts",
+      "types": "./types/core/config.d.ts",
       "require": "./lib/core/config/index.js",
       "default": "./lib/core/config/index.js"
     },
     "./core/tiles": {
-      "types": "./core/tiles.d.ts",
+      "types": "./types/core/tiles.d.ts",
       "require": "./lib/core/tiles/index.js",
       "default": "./lib/core/tiles/index.js"
     },
     "./node": {
-      "types": "./node.d.ts",
+      "types": "./types/node/index.d.ts",
       "require": "./lib/node/index.js",
       "default": "./lib/node/index.js"
     },
     "./node/analyze": {
-      "types": "./node/analyze.d.ts",
+      "types": "./types/node/analyze.d.ts",
       "require": "./lib/node/analyze.js",
       "default": "./lib/node/analyze.js"
     }
