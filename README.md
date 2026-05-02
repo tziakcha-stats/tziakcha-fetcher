@@ -164,6 +164,17 @@ npm test -- --runInBand
 npm run browser-smoke
 ```
 
+## 文档站
+
+仓库包含基于 `mkdocs` 的文档站配置：
+
+```sh
+python3 -m pip install -r requirements-docs.txt
+mkdocs serve
+```
+
+部署通过 GitHub Actions 发布到 GitHub Pages 项目页。
+
 ## License
 
 Apache-2.0 © [Choimoe](https://github.com/Choimoe)
