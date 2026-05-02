@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm pack --json > pack-output.json
+          npm pack --ignore-scripts --json > pack-output.json
           TARBALL="$(node -p "require('./pack-output.json')[0].filename")"
           echo "tarball=${TARBALL}" >> "${GITHUB_OUTPUT}"
 
