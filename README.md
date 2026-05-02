@@ -57,6 +57,23 @@ const winInfos = extractTziakchaRoundWinInfos(session);
 const action = decodeTziakchaAction(session.records[0].step.a[0]);
 ```
 
+处理单局状态并分析和牌：
+
+```js
+const {
+  analyzeTziakchaRecord,
+  simulateTziakchaRecord
+} = require("tziakcha-fetcher");
+
+const record = await fetchTziakchaRecord(session.records[0].id);
+const simulation = simulateTziakchaRecord(record);
+const analysis = analyzeTziakchaRecord(record);
+
+console.log(simulation.steps.length);
+console.log(analysis.handStringForGb);
+console.log(analysis.calculatedFan?.totalFan);
+```
+
 在测试或旧 Node 环境中可以注入 `fetch`：
 
 ```js
@@ -73,6 +90,8 @@ await fetchTziakchaSessionRounds("TszL5UsT", {
 - `fetchTziakchaRecord(recordId, options)`：调用 `/_qry/record/` 获取 record，并将 `script` 解码为 `step`。
 - `fetchTziakchaRecordStep(recordId, options)`：只返回解码后的 `step`。
 - `fetchTziakchaSessionRounds(inputUrlOrId, options)`：批量获取 session 下所有 record step。
+- `simulateTziakchaRecord(record)`：逐动作回放单局，返回步骤快照、起手、牌墙与玩家状态。
+- `analyzeTziakchaRecord(record, options)`：基于回放结果提取和牌事件、GB 牌串、环境位与算番结果。
 - `extractTziakchaRoundWinInfos(sessionRounds)`：从 `step.b`、`step.y` 提取和牌结果。
 - `summarizeTziakchaSession(sessionRounds)`：统计玩家和牌、自摸、放铳、番种等基础数据。
 - `decodeTziakchaAction(action)`：解析 `step.a` 中 `[combined, data, time]` 动作字段。
@@ -82,6 +101,7 @@ await fetchTziakchaSessionRounds("TszL5UsT", {
 - 当前版本只实现 session 和 record 抓取，不包含需要登录 Cookie 的 history 抓取。
 - `script` 按 base64 + zlib deflate 解码。
 - `step` 与 action 字段含义参考 `third_party/tziakcha_record_miner/docs/base/record.md`。
+- 默认使用 `gb-mahjong-js` 计算 `analyzeTziakchaRecord()` 的 `calculatedFan`，也可以通过 `options.fanCalculator` 注入自定义算番函数。
 
 ## License
 
