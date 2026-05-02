@@ -1,106 +1,169 @@
-# tziakcha-fetcher [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# tziakcha-fetcher
 
-> 获取 tziakcha 牌谱数据并进行简单处理和统计，提供一些牌谱相关的实用工具。
+> 获取 tziakcha 牌谱数据、解析局内步骤，并提供浏览器安全的公共接入面。
 
-## Installation
+## 安装
 
 ```sh
-$ npm install --save tziakcha-fetcher
+npm install tziakcha-fetcher
 ```
 
-## Usage
+## 2.0.0 变更
 
-抓取一个 session 下的所有小局牌谱：
+`2.0.0` 是一个 breaking change，目标是把默认包入口改成 browser-safe。
+
+核心变化：
+
+- `tziakcha-fetcher` 根入口现在只暴露浏览器安全能力
+- `record.analyze` 已从默认 `record` 命名空间移走
+- Node 专属分析能力需要显式从 `tziakcha-fetcher/node` 或 `tziakcha-fetcher/node/analyze` 引入
+- 包现在通过 `exports` 暴露稳定公共子路径
+- 包现在自带 TypeScript 声明文件
+
+迁移示例：
+
+旧写法：
 
 ```js
-const { session, stats } = require("tziakcha-fetcher");
+const { record } = require("tziakcha-fetcher");
+
+const analysis = record.analyze(roundRecord);
+```
+
+新写法：
+
+```js
+const { analyze } = require("tziakcha-fetcher/node");
+
+const analysis = analyze(roundRecord);
+```
+
+## 浏览器项目接入
+
+浏览器项目可以直接使用默认入口或公开子路径，不需要再引用 `lib/...` 内部目录。
+
+```js
+const { record, session, stats, url } = require("tziakcha-fetcher");
 
 async function main() {
-  const roundSession = await session.fetchRounds(
-    "https://tziakcha.net/?id=TszL5UsT"
-  );
+  const sessionId = url.parseTziakchaSessionId("https://tziakcha.net/?id=TszL5UsT");
+  const roundSession = await session.fetchRounds(sessionId);
   const summary = stats.summarizeSession(roundSession);
 
   console.log(roundSession.records.length);
   console.log(summary.players);
+  console.log(record.extractWins(roundSession).length);
 }
 
 main().catch(console.error);
 ```
 
-单独抓取 session 或 record：
+如果你只想引用局部能力，也可以直接使用公开子路径：
+
+```js
+const { parseTziakchaSessionId } = require("tziakcha-fetcher/url");
+const {
+  fetchTziakchaRecordStep
+} = require("tziakcha-fetcher/record/fetch");
+const {
+  extractTziakchaRoundWinInfos
+} = require("tziakcha-fetcher/record/win");
+```
+
+浏览器安全能力包括：
+
+- `url.parseTziakchaSessionId`
+- `session.fetch`
+- `session.fetchRounds`
+- `record.fetch`
+- `record.fetchStep`
+- `record.decodeAction`
+- `record.simulate`
+- `record.extractWins`
+- `record.parseWinFanItems`
+- `stats.summarizeSession`
+- `core.config`
+- `core.tiles`
+
+`record.fetch` 会在浏览器构建中自动切换到 `DecompressionStream("deflate")` 实现。
+
+## Node 分析能力
+
+`record.analyze` 依赖 `gb-mahjong-js` 及 Node 运行时链路，因此改为显式 Node-only 入口。
 
 ```js
 const { record, session } = require("tziakcha-fetcher");
+const { analyze } = require("tziakcha-fetcher/node");
 
-const game = await session.fetch("TszL5UsT");
-const roundRecord = await record.fetch(game.records[0].id);
-const step = await record.fetchStep(game.records[0].id);
+async function main() {
+  const roundSession = await session.fetchRounds("TszL5UsT");
+  const roundRecord = await record.fetch(roundSession.records[0].id);
+  const simulation = record.simulate(roundRecord);
+  const analysis = analyze(roundRecord);
+
+  console.log(simulation.steps.length);
+  console.log(analysis.handStringForGb);
+  console.log(analysis.calculatedFan?.totalFan);
+}
+
+main().catch(console.error);
 ```
 
-提取和牌信息和动作字段：
+也可以直接走单函数子路径：
 
 ```js
-const { record } = require("tziakcha-fetcher");
-
-const winInfos = record.extractWins(roundSession);
-const action = record.decodeAction(roundSession.records[0].step.a[0]);
+const analyze = require("tziakcha-fetcher/node/analyze");
 ```
 
-处理单局状态并分析和牌：
+## 公开 API
 
-```js
-const { record } = require("tziakcha-fetcher");
+根入口：
 
-const roundRecord = await record.fetch(roundSession.records[0].id);
-const simulation = record.simulate(roundRecord);
-const analysis = record.analyze(roundRecord);
+- `tziakcha-fetcher`
 
-console.log(simulation.steps.length);
-console.log(analysis.handStringForGb);
-console.log(analysis.calculatedFan?.totalFan);
+稳定公共子路径：
+
+- `tziakcha-fetcher/url`
+- `tziakcha-fetcher/session`
+- `tziakcha-fetcher/record`
+- `tziakcha-fetcher/record/fetch`
+- `tziakcha-fetcher/record/win`
+- `tziakcha-fetcher/record/actions`
+- `tziakcha-fetcher/record/simulate`
+- `tziakcha-fetcher/stats`
+- `tziakcha-fetcher/core`
+- `tziakcha-fetcher/core/config`
+- `tziakcha-fetcher/core/tiles`
+- `tziakcha-fetcher/node`
+- `tziakcha-fetcher/node/analyze`
+
+不建议再依赖 `tziakcha-fetcher/lib/...` 形式的内部路径，后续版本不保证兼容。
+
+## TypeScript
+
+包已内置 `.d.ts`，TypeScript 项目可直接使用。
+
+```ts
+import { parseTziakchaSessionId } from "tziakcha-fetcher/url";
+import { fetchTziakchaRecordStep } from "tziakcha-fetcher/record/fetch";
+import { analyze } from "tziakcha-fetcher/node";
 ```
 
-在测试或旧 Node 环境中可以注入 `fetch`：
+## 运行时说明
 
-```js
-await session.fetchRounds("TszL5UsT", {
-  fetch: customFetch,
-  baseUrl: "https://tziakcha.net"
-});
+- 当前版本只实现 session 和 record 抓取，不包含需要登录 Cookie 的 history 抓取
+- `step` 与 action 字段含义参考 `third_party/tziakcha_record_miner/docs/base/record.md`
+- Node 环境下 `record.fetch` 默认使用 `zlib` 解压
+- 浏览器环境下 `record.fetch` 默认使用 `DecompressionStream("deflate")`
+- `analyze` 默认使用 `gb-mahjong-js` 计算 `calculatedFan`，也可以通过 `options.fanCalculator` 注入自定义算番函数
+
+## 测试
+
+```sh
+npm test -- --runInBand
+npm run browser-smoke
 ```
-
-## API
-
-- `url.parseTziakchaSessionId(input)`：从 session URL 或纯 id 中解析对局 id。
-- `session.fetch(sessionId, options)`：调用 `/_qry/game/` 获取 session 信息。
-- `session.fetchRounds(inputUrlOrId, options)`：批量获取 session 下所有 record step。
-- `record.fetch(recordId, options)`：调用 `/_qry/record/` 获取 record，并将 `script` 解码为 `step`。
-- `record.fetchStep(recordId, options)`：只返回解码后的 `step`。
-- `record.decodeAction(action)`：解析 `step.a` 中 `[combined, data, time]` 动作字段。
-- `record.simulate(record)`：逐动作回放单局，返回步骤快照、起手、牌墙与玩家状态。
-- `record.analyze(record, options)`：基于回放结果提取和牌事件、GB 牌串、环境位与算番结果。
-- `record.extractWins(sessionRounds)`：从 `step.b`、`step.y` 提取和牌结果。
-- `stats.summarizeSession(sessionRounds)`：统计玩家和牌、自摸、放铳、番种等基础数据。
-- `core.config`：共享风位、番种名、动作类型等规则配置。
-- `core.tiles`：共享牌墙解码、牌 ID 和 GB 格式化工具。
-
-## Notes
-
-- 当前版本只实现 session 和 record 抓取，不包含需要登录 Cookie 的 history 抓取。
-- `script` 按 base64 + zlib deflate 解码。
-- `step` 与 action 字段含义参考 `third_party/tziakcha_record_miner/docs/base/record.md`。
-- 默认使用 `gb-mahjong-js` 计算 `record.analyze()` 的 `calculatedFan`，也可以通过 `options.fanCalculator` 注入自定义算番函数。
 
 ## License
 
 Apache-2.0 © [Choimoe](https://github.com/Choimoe)
-
-[npm-image]: https://badge.fury.io/js/tziakcha-fetcher.svg
-[npm-url]: https://npmjs.org/package/tziakcha-fetcher
-[travis-image]: https://travis-ci.com/tziakcha-stats/tziakcha-fetcher.svg?branch=master
-[travis-url]: https://travis-ci.com/tziakcha-stats/tziakcha-fetcher
-[daviddm-image]: https://david-dm.org/tziakcha-stats/tziakcha-fetcher.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/tziakcha-stats/tziakcha-fetcher
-[coveralls-image]: https://coveralls.io/repos/tziakcha-stats/tziakcha-fetcher/badge.svg
-[coveralls-url]: https://coveralls.io/r/tziakcha-stats/tziakcha-fetcher
