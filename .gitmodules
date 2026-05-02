@@ -1,0 +1,3 @@
+[submodule "third_party/tziakcha_record_miner"]
+	path = third_party/tziakcha_record_miner
+	url = git@github.com:tziakcha-stats/tziakcha_record_miner.git
