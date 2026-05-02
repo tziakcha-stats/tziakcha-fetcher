@@ -69,7 +69,10 @@
   },
   "repository": "tziakcha-stats/tziakcha-fetcher",
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/lib/__tests__/**/*.test.js"
+    ]
   },
   "license": "Apache-2.0"
 }
