@@ -4,26 +4,8 @@
 
 ## 安装
 
-```
-npm install tziakcha-fetcher
-```
-
 ```bash linenums="1"
 npm install tziakcha-fetcher
-```
-
-```bash
-npm install tziakcha-fetcher
-```
-
-```
-npm install tziakcha-fetcher
-```
-
-```bash linenums="1" hl_lines="2 3"
-cmake .. \
-    -DCMAKE_BUILD_TYPE=Debug \
-    -DUSE_PERF_REPORT=ON
 ```
 
 ## 能力范围
