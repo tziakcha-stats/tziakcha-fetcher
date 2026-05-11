@@ -63,6 +63,8 @@ export interface RoundWinner {
   playerIndex: number;
   totalFan: number;
   fanItems: WinFanItem[];
+  winTile: number | null;
+  winTileName: string | null;
 }
 
 export interface RoundDiscarder {
@@ -76,6 +78,8 @@ export interface RoundWinInfo {
   winners: RoundWinner[];
   discarders: RoundDiscarder[];
   selfDraw: boolean;
+  winTile: number | null;
+  winTileName: string | null;
 }
 
 export interface SummaryPlayerStats {
