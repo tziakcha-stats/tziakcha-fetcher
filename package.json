@@ -160,6 +160,6 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "gb-mahjong-js": "^1.0.1"
+    "gb-mahjong-js": "^2.1.2"
   }
 }
