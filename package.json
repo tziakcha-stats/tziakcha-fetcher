@@ -105,7 +105,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^9.1.7",
     "jest": "^26.1.0",
-    "lint-staged": "^9.4.3",
+    "lint-staged": "^17.0.5",
     "prettier": "^1.19.1"
   },
   "engines": {
