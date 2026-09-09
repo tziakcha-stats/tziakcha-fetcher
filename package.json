@@ -101,7 +101,7 @@
     "esbuild": "^0.28.0",
     "eslint": "^10.8.1",
     "eslint-config-prettier": "^6.6.0",
-    "eslint-config-xo": "^1.0.0",
+    "eslint-config-xo": "^2.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^9.1.7",
     "jest": "^26.1.0",
