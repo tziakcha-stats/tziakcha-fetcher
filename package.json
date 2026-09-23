@@ -99,10 +99,10 @@
   "devDependencies": {
     "coveralls": "^3.0.7",
     "esbuild": "^0.28.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.6.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
     "eslint-config-xo": "^0.27.2",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-prettier": "^5.5.6",
     "husky": "^9.1.7",
     "jest": "^26.1.0",
     "lint-staged": "^17.0.5",
@@ -136,6 +136,7 @@
       "node": true
     },
     "rules": {
+      "no-redeclare": "off",
       "prettier/prettier": "error"
     },
     "plugins": [
